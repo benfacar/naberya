@@ -6,6 +6,7 @@
     <title>Naberya</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
 </head>
 <body>
 
@@ -13,38 +14,41 @@
         <div class="auth-box">
             <h2 id="auth-title">Naberya'ya Giriş</h2>
             <div id="error-msg" class="error-text"></div>
-            
             <input type="text" id="username-input" placeholder="Kullanıcı Adı">
             <input type="password" id="password-input" placeholder="Şifre">
-            
             <button id="auth-btn">Giriş Yap</button>
-            
-            <p class="switch-auth">
-                Hesabın yok mu? <span id="toggle-auth">Kayıt Ol</span>
-            </p>
+            <p class="switch-auth">Hesabın yok mu? <span id="toggle-auth">Kayıt Ol</span></p>
         </div>
     </div>
 
     <div id="app">
         <nav id="servers-nav">
-            <div class="server-icon home-icon"><i class="fab fa-discord"></i></div>
+            <div class="server-icon home-icon" title="Ana Sayfa"><i class="fab fa-discord"></i></div>
             <div class="separator"></div>
             <div id="server-list"></div>
-            <div class="server-icon add-server" id="add-server-btn"><i class="fas fa-plus"></i></div>
-	    <div class="server-icon add-server" id="add-server-btn" title="Sunucu Oluştur"><i class="fas fa-plus"></i></div>
-    
-            <div class="server-icon join-server" id="join-server-btn" style="background: #313338; color:#23a559;" title="Bir Sunucuya Katıl">
-            	<i class="fas fa-compass"></i>
-            </div>
+            <div class="server-icon add-server" id="add-server-btn" title="Sunucu Oluştur"><i class="fas fa-plus"></i></div>
+            <div class="server-icon join-server" id="join-server-btn" title="Koduyla Katıl"><i class="fas fa-compass"></i></div>
         </nav>
 
         <aside id="channels-panel">
             <header class="server-header">
                 <h3 id="current-server-name">Sunucu Seç</h3>
-                <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-trash" id="delete-server-btn" title="Sunucuyu Sil" style="display:none; color:#fa777c; cursor:pointer;"></i>
             </header>
-            <div class="channels-list" id="channel-list"></div>
             
+            <div class="channels-list" id="channel-list">
+                </div>
+            
+            <div id="add-channel-btn" class="add-channel-area" style="display:none;">
+                <i class="fas fa-plus"></i> Kanal Oluştur
+            </div>
+
+            <div id="voice-status-panel" style="display:none; background:#232428; padding:8px; border-bottom:1px solid #1e1f22;">
+                <div style="color:#23a559; font-weight:bold; font-size:12px;">Ses Bağlandı</div>
+                <div id="voice-channel-name" style="font-size:12px; color:#ddd;">Genel</div>
+                <button onclick="leaveVoice()" style="width:100%; margin-top:5px; background:#fa777c; border:none; color:white; border-radius:3px; cursor:pointer;">Ayrıl</button>
+            </div>
+
             <div class="user-panel">
                 <img id="my-avatar" src="" alt="">
                 <div class="user-info">
@@ -52,7 +56,7 @@
                     <span class="discriminator">#ONLINE</span>
                 </div>
                 <div class="user-icons">
-                    <i class="fas fa-microphone"></i>
+                    <i class="fas fa-microphone" id="mic-toggle"></i>
                     <i class="fas fa-headphones"></i>
                     <i class="fas fa-cog"></i>
                 </div>
@@ -61,15 +65,18 @@
 
         <main id="chat-area">
             <header class="chat-header">
-                <i class="fas fa-hashtag"></i>
-                <h3 id="current-channel-name">kanal-seç</h3>
+                <div style="display:flex; align-items:center;">
+                    <i class="fas fa-hashtag" id="chat-header-icon"></i>
+                    <h3 id="current-channel-name">kanal-seç</h3>
+                </div>
+                <i class="fas fa-trash" id="delete-channel-btn" style="display:none; color:#fa777c; cursor:pointer;" title="Kanalı Sil"></i>
             </header>
 
             <div id="messages-container">
                 <div class="welcome-message">Bir sunucu ve kanal seçerek sohbete başla! 👋</div>
             </div>
 
-            <div class="chat-input-area">
+            <div class="chat-input-area" id="input-area">
                 <div class="input-wrapper">
                     <button class="add-btn"><i class="fas fa-plus-circle"></i></button>
                     <input type="text" id="message-input" placeholder="Mesaj gönder..." autocomplete="off">
@@ -81,6 +88,11 @@
                 </div>
             </div>
         </main>
+
+        <aside id="members-panel">
+            <div class="members-header">ÜYELER</div>
+            <div id="members-list"></div>
+        </aside>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
