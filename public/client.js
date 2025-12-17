@@ -105,6 +105,7 @@ function selectServer(serverId) {
 
 socket.on('server-details', (server) => {
     document.getElementById('current-server-name').textContent = server.name;
+    document.getElementById('current-server-name').innerHTML = `${server.name} <span style="font-size:10px; color:gray; cursor:pointer;" onclick="alert('Davet Kodu: ${server.inviteCode}')">(KOD: ${server.inviteCode})</span>`;
     channelList.innerHTML = '<div class="channel-group">METİN KANALLARI</div>';
     
     server.channels.forEach(channel => {
@@ -182,3 +183,22 @@ function appendMessage(msg) {
 function scrollToBottom() {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
+
+// --- SUNUCUYA KATILMA ---
+const joinServerBtn = document.getElementById('join-server-btn');
+
+joinServerBtn.addEventListener('click', () => {
+    const code = prompt("Katılmak istediğin sunucunun DAVET KODUNU gir (Örn: A8F2K9):");
+    if (code) {
+        socket.emit('join-server-by-code', { code: code.trim(), userId: currentUser._id });
+    }
+});
+
+socket.on('server-joined', (server) => {
+    alert(`Başarılı! ${server.name} sunucusuna katıldın.`);
+    addServerIcon(server); // Sol menüye ekle
+    selectServer(server._id); // Oraya geçiş yap
+});
+
+// Hata mesajlarını dinle (Eğer client.js'de yoksa ekle)
+socket.on('error', (msg) => alert(msg));
