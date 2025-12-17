@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naberya</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="auth-overlay">
+        <div class="auth-box">
+            <h2 id="auth-title">Naberya'ya Giriş</h2>
+            <div id="error-msg" class="error-text"></div>
+            
+            <input type="text" id="username-input" placeholder="Kullanıcı Adı">
+            <input type="password" id="password-input" placeholder="Şifre">
+            
+            <button id="auth-btn">Giriş Yap</button>
+            
+            <p class="switch-auth">
+                Hesabın yok mu? <span id="toggle-auth">Kayıt Ol</span>
+            </p>
+        </div>
+    </div>
+
+    <div id="app">
+        <nav id="servers-nav">
+            <div class="server-icon home-icon"><i class="fab fa-discord"></i></div>
+            <div class="separator"></div>
+            <div id="server-list"></div>
+            <div class="server-icon add-server" id="add-server-btn"><i class="fas fa-plus"></i></div>
+        </nav>
+
+        <aside id="channels-panel">
+            <header class="server-header">
+                <h3 id="current-server-name">Sunucu Seç</h3>
+                <i class="fas fa-chevron-down"></i>
+            </header>
+            <div class="channels-list" id="channel-list"></div>
+            
+            <div class="user-panel">
+                <img id="my-avatar" src="" alt="">
+                <div class="user-info">
+                    <span id="my-username" class="username">...</span>
+                    <span class="discriminator">#ONLINE</span>
+                </div>
+                <div class="user-icons">
+                    <i class="fas fa-microphone"></i>
+                    <i class="fas fa-headphones"></i>
+                    <i class="fas fa-cog"></i>
+                </div>
+            </div>
+        </aside>
+
+        <main id="chat-area">
+            <header class="chat-header">
+                <i class="fas fa-hashtag"></i>
+                <h3 id="current-channel-name">kanal-seç</h3>
+            </header>
+
+            <div id="messages-container">
+                <div class="welcome-message">Bir sunucu ve kanal seçerek sohbete başla! 👋</div>
+            </div>
+
+            <div class="chat-input-area">
+                <div class="input-wrapper">
+                    <button class="add-btn"><i class="fas fa-plus-circle"></i></button>
+                    <input type="text" id="message-input" placeholder="Mesaj gönder..." autocomplete="off">
+                    <div class="right-icons">
+                        <i class="fas fa-gift"></i>
+                        <i class="fas fa-sticky-note"></i>
+                        <i class="fas fa-smile"></i>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>
